@@ -2,78 +2,89 @@ const steps = [
   {
     num: "01",
     title: "Request a Role",
-    body: "Specify the job function, required skills, and access level. We match you with the right Ticia agent profile.",
-    detail: "avg. response < 2h",
+    body: "Tell us the function, skills required, and access level. We match you with a Ticia agent profile built for that job.",
+    badge: "< 2h",
+    color: "#c8ff00",
+    icon: "⊕",
   },
   {
     num: "02",
     title: "Agent Provisioning",
-    body: "Your agent receives a company email address, is granted access to your tools, and ingests your documentation, processes, and institutional knowledge.",
-    detail: "< 24h setup",
+    body: "Your agent receives a company email, gets granted access to your tool stack, and ingests your documentation, processes, and institutional knowledge.",
+    badge: "< 24h",
+    color: "#4f9cff",
+    icon: "⊞",
   },
   {
     num: "03",
     title: "Onboarding Sprint",
-    body: "Like any new hire, the agent shadows workflows, attends orientation, and asks clarifying questions. It learns your specific company context — not just generic knowledge.",
-    detail: "3–5 day ramp",
+    body: "Like any new hire, the agent shadows workflows, attends orientation, asks clarifying questions, and learns your specific company context.",
+    badge: "3–5 days",
+    color: "#a78bfa",
+    icon: "◑",
   },
   {
     num: "04",
     title: "Deployed & Working",
-    body: "The agent joins your communication channels, attends meetings via live TTS/STT, responds to emails, and executes assigned tasks. Fully integrated.",
-    detail: "ongoing",
+    body: "Joins your comms channels, attends meetings via live TTS/STT, responds to emails, and executes assigned tasks. Fully integrated.",
+    badge: "Ongoing",
+    color: "#2dd4bf",
+    icon: "◉",
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-32 border-t border-white/6">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center gap-4 mb-16">
-          <span className="num-label">HOW IT WORKS</span>
-          <div className="h-px flex-1 bg-white/6" />
+    <section id="how-it-works" className="relative py-28 border-t border-white/5 overflow-hidden">
+      <div className="orb orb-blue w-96 h-96 bottom-0 left-0 opacity-30" />
+
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="flex items-center gap-4 mb-6">
+          <span className="label-accent">Process</span>
+          <div className="h-px flex-1 bg-white/5" />
         </div>
 
-        <div className="relative">
-          {/* Connecting line */}
-          <div className="absolute left-6 top-10 bottom-10 w-px bg-white/6 hidden md:block" />
+        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-16 max-w-2xl leading-tight">
+          From request
+          <br />
+          <span className="text-white/25 font-light">to fully operational.</span>
+        </h2>
 
-          <div className="flex flex-col gap-0">
-            {steps.map((step, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {steps.map((step) => (
+            <div
+              key={step.num}
+              className="glass p-6 group hover:border-white/16 transition-all duration-300 relative overflow-hidden flex flex-col"
+            >
+              {/* Top accent */}
               <div
-                key={step.num}
-                className="relative flex flex-col md:flex-row gap-6 md:gap-12 p-8 border-b border-white/6 glass-hover transition-all duration-300 group"
-              >
-                {/* Number node */}
-                <div className="flex-shrink-0 flex items-start gap-4 md:w-48">
-                  <div className="w-3 h-3 border border-white/20 bg-[#0a0a0a] mt-1 group-hover:border-[#c8ff00]/50 transition-colors duration-300 flex-shrink-0" />
-                  <div>
-                    <span className="num-label">{step.num}</span>
-                    <div className="text-[10px] text-white/20 tracking-widest mt-1 uppercase font-mono">
-                      {step.detail}
-                    </div>
-                  </div>
-                </div>
+                className="absolute top-0 left-0 w-full h-0.5 opacity-50"
+                style={{ background: step.color }}
+              />
 
-                {/* Content */}
-                <div className="flex-1">
-                  <h3 className="text-base font-medium text-white/80 mb-3 group-hover:text-white transition-colors duration-200 tracking-wide">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-white/35 leading-relaxed font-light max-w-lg">
-                    {step.body}
-                  </p>
-                </div>
-
-                {/* Visual accent */}
-                <div className="hidden lg:flex items-center justify-end w-24">
-                  <span className="text-5xl font-bold text-white/[0.04] group-hover:text-white/[0.07] transition-colors duration-300 select-none font-mono">
-                    {i + 1}
-                  </span>
+              {/* Icon + num */}
+              <div className="flex items-center justify-between mb-8">
+                <span className="text-2xl" style={{ color: step.color + "55" }}>
+                  {step.icon}
+                </span>
+                <div
+                  className="text-xs font-mono px-2 py-0.5 border"
+                  style={{ color: step.color, borderColor: step.color + "40" }}
+                >
+                  {step.badge}
                 </div>
               </div>
-            ))}
-          </div>
+
+              {/* Step number */}
+              <div className="label mb-2">{step.num}</div>
+              <h3 className="text-sm font-semibold text-white/85 mb-3 group-hover:text-white transition-colors duration-200">
+                {step.title}
+              </h3>
+              <p className="text-xs text-white/35 leading-relaxed font-light flex-1">
+                {step.body}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -14,7 +14,7 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
+    const handler = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", handler);
     return () => window.removeEventListener("scroll", handler);
   }, []);
@@ -27,39 +27,34 @@ export default function Nav() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-3 group">
-          <span className="w-7 h-7 border border-[#c8ff00]/60 flex items-center justify-center">
-            <span className="text-[#c8ff00] font-bold text-xs tracking-widest font-mono">T</span>
+        <a href="#" className="flex items-center gap-3">
+          <span className="w-8 h-8 bg-[#c8ff00] flex items-center justify-center">
+            <span className="text-black font-black text-sm tracking-widest font-mono">T</span>
           </span>
-          <span className="text-sm font-semibold tracking-[0.18em] uppercase text-white">
-            Ticia
-          </span>
+          <span className="text-sm font-bold tracking-[0.18em] uppercase text-white">Ticia</span>
         </a>
 
-        {/* Desktop nav */}
+        {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <a
               key={l.label}
               href={l.href}
-              className="text-xs tracking-widest uppercase text-white/45 hover:text-white/90 transition-colors duration-200"
+              className="label hover:text-white/80 transition-colors duration-200"
             >
               {l.label}
             </a>
           ))}
         </div>
 
-        {/* CTA */}
+        {/* Right CTA */}
         <div className="hidden md:flex items-center gap-4">
-          <a
-            href="#contact"
-            className="text-xs tracking-widest uppercase text-white/50 hover:text-white transition-colors duration-200"
-          >
+          <a href="#contact" className="label hover:text-white/70 transition-colors duration-200">
             Sign In
           </a>
           <a
             href="#contact"
-            className="glass border border-white/12 px-5 py-2 text-xs tracking-widest uppercase text-white/80 hover:text-white hover:border-white/24 transition-all duration-200"
+            className="bg-[#c8ff00] text-black px-5 py-2 text-xs font-bold tracking-widest uppercase hover:bg-[#d4ff33] transition-colors duration-200"
           >
             Request Access
           </a>
@@ -71,21 +66,21 @@ export default function Nav() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          <span className={`block w-5 h-px bg-white/60 transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block w-5 h-px bg-white/60 transition-all ${menuOpen ? "opacity-0" : ""}`} />
-          <span className={`block w-5 h-px bg-white/60 transition-all ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+          <span className={`block w-5 h-px bg-white/70 transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
+          <span className={`block w-5 h-px bg-white/70 transition-all ${menuOpen ? "opacity-0" : ""}`} />
+          <span className={`block w-5 h-px bg-white/70 transition-all ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
         </button>
       </div>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden glass border-t border-white/8 px-6 py-6 flex flex-col gap-5">
+        <div className="md:hidden glass-dark border-t border-white/8 px-6 py-6 flex flex-col gap-5">
           {links.map((l) => (
             <a
               key={l.label}
               href={l.href}
               onClick={() => setMenuOpen(false)}
-              className="text-xs tracking-widest uppercase text-white/55 hover:text-white transition-colors"
+              className="label hover:text-white/80 transition-colors"
             >
               {l.label}
             </a>
@@ -93,7 +88,7 @@ export default function Nav() {
           <a
             href="#contact"
             onClick={() => setMenuOpen(false)}
-            className="mt-2 glass border border-white/12 px-5 py-2.5 text-xs tracking-widest uppercase text-white/80 text-center"
+            className="mt-2 bg-[#c8ff00] text-black px-5 py-2.5 text-xs font-bold tracking-widest uppercase text-center"
           >
             Request Access
           </a>

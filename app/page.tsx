@@ -3,6 +3,7 @@ import Hero from "./components/Hero";
 import SocialProof from "./components/SocialProof";
 import ProblemSection from "./components/ProblemSection";
 import HowItWorks from "./components/HowItWorks";
+import AgentShowcase from "./components/AgentShowcase";
 import Capabilities from "./components/Capabilities";
 import Pricing from "./components/Pricing";
 import ContactSection from "./components/ContactSection";
@@ -16,6 +17,7 @@ export default function Home() {
       <SocialProof />
       <ProblemSection />
       <HowItWorks />
+      <AgentShowcase />
       <Capabilities />
       <Pricing />
       <ContactSection />
