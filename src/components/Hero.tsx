@@ -1,114 +1,92 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import AgentCard from "./AgentCard";
 import ContactModal from "./ContactModal";
 
-const roles = [
-  "Customer Support Agent",
-  "Data Analyst",
-  "HR Coordinator",
-  "Research Specialist",
-  "Sales Dev Rep",
+const STATS = [
+  { value: "< 24h", label: "To deploy" },
+  { value: "∞", label: "Parallel roles" },
+  { value: "100%", label: "Memory retention" },
+  { value: "Live", label: "Meeting voice" },
 ];
 
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayed, setDisplayed] = useState("");
-  const [typing, setTyping] = useState(true);
   const [contactOpen, setContactOpen] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const target = roles[roleIndex];
-    if (typing) {
-      if (displayed.length < target.length) {
-        timer.current = setTimeout(() => setDisplayed(target.slice(0, displayed.length + 1)), 58);
-      } else {
-        timer.current = setTimeout(() => setTyping(false), 2400);
-      }
-    } else {
-      if (displayed.length > 0) {
-        timer.current = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 30);
-      } else {
-        timer.current = setTimeout(() => {
-          setRoleIndex((i) => (i + 1) % roles.length);
-          setTyping(true);
-        }, 80);
-      }
-    }
-    return () => { if (timer.current) clearTimeout(timer.current); };
-  }, [displayed, typing, roleIndex]);
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center grid-lines overflow-hidden">
-        {/* Orbs — give glass blur depth */}
-        <div className="orb w-[480px] h-[480px] bg-[rgba(200,255,0,0.07)] top-[-80px] left-[-120px]" />
-        <div className="orb w-[400px] h-[400px] bg-[rgba(79,156,255,0.1)] top-[15%] right-[-60px]" />
-        <div className="orb w-[320px] h-[320px] bg-[rgba(167,139,250,0.08)] bottom-[5%] left-[35%]" />
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background orbs */}
+        <div className="orb w-[600px] h-[600px] bg-[rgba(79,156,255,0.07)] top-[-100px] left-[-80px]" />
+        <div className="orb w-[400px] h-[400px] bg-[rgba(200,255,0,0.05)] bottom-[10%] right-[5%]" />
+        <div className="orb w-[300px] h-[300px] bg-[rgba(167,139,250,0.06)] top-[30%] left-[38%]" />
 
-        {/* Corner accent marks */}
-        <div className="absolute top-20 left-0 w-8 h-px bg-[#c8ff00]/30 pointer-events-none" />
-        <div className="absolute top-20 left-0 w-px h-8 bg-[#c8ff00]/30 pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-8 pt-20 pb-20 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-16 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-            {/* ── Left: copy ── */}
-            <div>
-              {/* Status chip */}
-              <div className="inline-flex items-center gap-2 glass px-3 py-1.5 mb-10">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#c8ff00] pulse-dot" />
-                <span className="label-accent">Now hiring AI employees</span>
-              </div>
-
-              {/* Headline */}
-              <h1 className="text-5xl sm:text-6xl xl:text-7xl font-bold tracking-tight leading-[0.9] text-white mb-6">
-                Hire an AI
-                <br />
-                <span className="text-white/20">as your next</span>
-                <br />
-                Employee.
-              </h1>
-
-              {/* Typewriter role */}
-              <div className="flex items-center gap-3 mb-8 h-6">
-                <span className="label">Role:</span>
-                <span className="text-sm font-mono text-[#c8ff00]">
-                  {displayed}<span className="blink">|</span>
-                </span>
-              </div>
-
-              <p className="text-white/40 text-sm leading-relaxed mb-10 max-w-md font-light">
-                Ticia agents are onboarded like humans — given a company email,
-                tool access, institutional knowledge, and live meeting presence.
-                Autonomous from day one.
-              </p>
-
-              {/* Single CTA */}
-              <button
-                onClick={() => setContactOpen(true)}
-                className="inline-flex items-center gap-2 bg-[#c8ff00] text-black px-7 py-3.5 text-xs font-bold tracking-widest uppercase hover:bg-[#d6ff33] transition-colors duration-200"
-              >
-                Get in touch
-              </button>
+            {/* ── LEFT: Agent card visual ── */}
+            <div className="flex justify-center lg:justify-start pl-0 lg:pl-8 pt-10">
+              <AgentCard />
             </div>
 
-            {/* ── Right: animated agent card ── */}
-            <div className="relative flex justify-center lg:justify-end">
-              <AgentCard />
+            {/* ── RIGHT: Headline + CTA ── */}
+            <div className="lg:pl-8">
+              {/* Eyebrow */}
+              <div className="inline-flex items-center gap-2.5 glass border border-white/8 px-4 py-2 mb-10">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#c8ff00] flex-shrink-0 pulse-dot" />
+                <span className="label-accent">Workforce AI — Private Beta</span>
+              </div>
+
+              {/* Headline — very large, bold, like CrypLock */}
+              <h1 className="font-black uppercase leading-[0.88] tracking-tight mb-8"
+                style={{ fontSize: "clamp(52px, 7vw, 88px)" }}>
+                <span className="text-white">The world's<br/>first truly</span>
+                <br/>
+                <span className="text-white/25">autonomous</span>
+                <br/>
+                <span className="text-white">AI Employee.</span>
+              </h1>
+
+              <p className="text-sm text-white/35 leading-relaxed mb-10 max-w-sm font-light">
+                Ticia agents are onboarded exactly like humans — company email,
+                tool access, institutional knowledge, and live meeting presence
+                via TTS/STT. Autonomous from day one.
+              </p>
+
+              {/* CTA row */}
+              <div className="flex items-center gap-4 mb-14">
+                <button
+                  onClick={() => setContactOpen(true)}
+                  className="inline-flex items-center gap-2.5 bg-[#c8ff00] text-black px-8 py-3.5 text-xs font-black tracking-[0.16em] uppercase hover:bg-[#d8ff33] transition-colors duration-150"
+                >
+                  Hire your first agent
+                </button>
+                <button className="inline-flex items-center gap-2 glass border border-white/10 px-6 py-3.5 text-xs tracking-[0.14em] uppercase text-white/40 hover:text-white/70 hover:border-white/20 transition-all duration-200">
+                  How it works ↓
+                </button>
+              </div>
+
+              {/* Stats row */}
+              <div className="grid grid-cols-4 gap-6 pt-8 border-t border-white/6">
+                {STATS.map(({ value, label }) => (
+                  <div key={label}>
+                    <div className="text-xl font-black text-white leading-tight">{value}</div>
+                    <div className="label mt-1 text-[9px]">{label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
 
           </div>
         </div>
 
         {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, #080810)" }} />
+        <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent, #09090f)" }} />
       </section>
 
-      {/* Simple footer line */}
+      {/* Footer */}
       <footer className="border-t border-white/5 py-8">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="w-5 h-5 bg-[#c8ff00] flex items-center justify-center">
               <span className="text-black font-black text-[9px] font-mono">T</span>

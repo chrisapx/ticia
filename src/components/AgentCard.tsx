@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 
-// Tasks cycle: complete one by one, then reset after all done
 const TASKS = [
-  "Reply to 12 support tickets",
-  "Compile weekly analytics",
-  "Schedule onboarding calls",
-  "Attend Product Review",
+  "Reply to 14 support tickets",
+  "Compile Q3 analytics report",
+  "Schedule onboarding for new hire",
+  "Attend Product Review meeting",
 ];
 
-// Live activity messages that type out
 const ACTIVITY = [
   "Responding to customer inquiry…",
   "Pulling Q3 data from dashboard…",
@@ -17,22 +15,29 @@ const ACTIVITY = [
   "Updating CRM with call notes…",
 ];
 
+// Seed the meeting timer mid-session so it looks like the agent has been in the meeting a while
+const INITIAL_MEETING_ELAPSED_SECONDS = 1447; // ~24 minutes
+
 export default function AgentCard() {
   const [completedTasks, setCompletedTasks] = useState<number[]>([]);
   const [activityIndex, setActivityIndex] = useState(0);
   const [activityText, setActivityText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+  const [elapsed, setElapsed] = useState(INITIAL_MEETING_ELAPSED_SECONDS);
 
-  // Complete tasks one by one every 2.5 s, then reset
+  // Meeting timer counts up
+  useEffect(() => {
+    const t = setInterval(() => setElapsed((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Complete tasks one by one every 3s, then reset
   useEffect(() => {
     if (completedTasks.length >= TASKS.length) {
       const t = setTimeout(() => setCompletedTasks([]), 2000);
       return () => clearTimeout(t);
     }
-    const t = setTimeout(
-      () => setCompletedTasks((p) => [...p, p.length]),
-      2500
-    );
+    const t = setTimeout(() => setCompletedTasks((p) => [...p, p.length]), 3000);
     return () => clearTimeout(t);
   }, [completedTasks]);
 
@@ -41,10 +46,10 @@ export default function AgentCard() {
     const target = ACTIVITY[activityIndex];
     if (isTyping) {
       if (activityText.length < target.length) {
-        const t = setTimeout(() => setActivityText(target.slice(0, activityText.length + 1)), 40);
+        const t = setTimeout(() => setActivityText(target.slice(0, activityText.length + 1)), 38);
         return () => clearTimeout(t);
       } else {
-        const t = setTimeout(() => setIsTyping(false), 1800);
+        const t = setTimeout(() => setIsTyping(false), 2000);
         return () => clearTimeout(t);
       }
     } else {
@@ -52,84 +57,127 @@ export default function AgentCard() {
         setActivityText("");
         setActivityIndex((i) => (i + 1) % ACTIVITY.length);
         setIsTyping(true);
-      }, 400);
+      }, 300);
       return () => clearTimeout(t);
     }
   }, [activityText, isTyping, activityIndex]);
 
+  const mm = String(Math.floor(elapsed / 60)).padStart(2, "0");
+  const ss = String(elapsed % 60).padStart(2, "0");
+
   return (
-    <div className="relative w-full max-w-[340px]">
-      {/* Glow behind card */}
-      <div className="absolute inset-0 rounded-none pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at center, rgba(79,156,255,0.12) 0%, transparent 70%)", transform: "scale(1.3)" }} />
+    <div className="relative float">
+      {/* Ambient glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at 60% 40%, rgba(79,156,255,0.13) 0%, transparent 65%)",
+          transform: "scale(1.5)",
+        }}
+      />
 
-      {/* Main card */}
-      <div className="relative glass float overflow-hidden">
+      {/* ── Main agent card ── */}
+      <div className="relative glass w-[320px]" style={{ boxShadow: "0 32px 80px rgba(0,0,0,0.5)" }}>
 
-        {/* Card header */}
-        <div className="px-5 pt-5 pb-4 border-b border-white/6">
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-[#4f9cff]/40 pointer-events-none" />
+
+        {/* Header */}
+        <div className="px-5 pt-5 pb-4 border-b border-white/5">
           <div className="flex items-center gap-3.5">
-            {/* Avatar */}
             <div className="relative flex-shrink-0">
-              <div className="w-11 h-11 rounded-full bg-[rgba(79,156,255,0.15)] border border-[rgba(79,156,255,0.25)] flex items-center justify-center text-sm font-bold text-[#4f9cff]">
+              <div className="w-11 h-11 rounded-full bg-[rgba(79,156,255,0.18)] border border-[rgba(79,156,255,0.30)] flex items-center justify-center text-sm font-bold text-[#4f9cff]">
                 SC
               </div>
-              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#c8ff00] border-2 border-[#080810] pulse-dot" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#c8ff00] border-2 border-[#09090f] pulse-dot" />
             </div>
-            {/* Name */}
             <div className="flex-1 min-w-0">
               <div className="text-sm font-semibold text-white leading-tight">Sarah Chen</div>
-              <div className="text-xs text-white/35 mt-0.5">Customer Support Agent</div>
+              <div className="text-[11px] text-white/35 mt-0.5">Customer Support Agent</div>
             </div>
-            {/* Status badge */}
-            <div className="glass px-2 py-1 flex-shrink-0">
-              <span className="label-accent text-[9px]">Active</span>
+            <div className="flex-shrink-0 glass px-2.5 py-1 border border-[#c8ff00]/20">
+              <span className="label-accent text-[8px]">Active</span>
             </div>
           </div>
-
-          {/* Email identity */}
-          <div className="mt-3 flex items-center gap-2 text-xs text-white/30">
-            <span>✉</span>
-            <span className="font-mono">sarah@yourcompany.com</span>
+          {/* Email */}
+          <div className="mt-3 flex items-center gap-2 text-[11px] text-white/25 font-mono">
+            <span className="text-[9px]">✉</span>
+            sarah@yourcompany.com
+            <span className="ml-auto glass px-2 py-0.5">
+              <span className="label text-[8px]">Company email</span>
+            </span>
           </div>
         </div>
 
-        {/* Live status */}
-        <div className="px-5 py-3 border-b border-white/6 bg-[rgba(79,156,255,0.04)]">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#4f9cff] flex-shrink-0 pulse-blue" />
-            <span className="text-xs text-[#4f9cff]">In meeting · Product Review</span>
+        {/* Live meeting */}
+        <div className="px-5 py-3 border-b border-white/5 bg-[rgba(79,156,255,0.04)]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4f9cff] flex-shrink-0 pulse-blue" />
+              <span className="text-[11px] text-[#4f9cff] font-medium">In meeting · Product Review</span>
+            </div>
+            <span className="label text-[9px]">{mm}:{ss} elapsed · 3 participants</span>
           </div>
         </div>
 
-        {/* Task list */}
-        <div className="px-5 py-4 border-b border-white/6">
+        {/* Tasks */}
+        <div className="px-5 py-4 border-b border-white/5">
           <div className="label mb-3">Today's tasks</div>
           {TASKS.map((task, i) => {
             const done = completedTasks.includes(i);
             return (
               <div
                 key={i}
-                className={`flex items-start gap-2.5 py-1.5 text-xs transition-all duration-500 ${done ? "opacity-40" : "opacity-75"}`}
+                className={`flex items-start gap-2.5 py-1.5 text-[11px] transition-all duration-700 ${done ? "opacity-35" : "opacity-70"}`}
               >
                 <span
-                  className={`mt-0.5 flex-shrink-0 w-3.5 h-3.5 border flex items-center justify-center transition-all duration-300 ${
-                    done ? "border-[#c8ff00]/40 text-[#c8ff00]" : "border-white/15"
+                  className={`mt-0.5 flex-shrink-0 w-3 h-3 border flex items-center justify-center transition-all duration-500 ${
+                    done ? "border-[#c8ff00]/50 bg-[#c8ff00]/10" : "border-white/12"
                   }`}
                 >
-                  {done && <span className="text-[8px] leading-none">✓</span>}
+                  {done && <span className="text-[7px] text-[#c8ff00] leading-none">✓</span>}
                 </span>
-                <span className={done ? "line-through" : ""}>{task}</span>
+                <span className={done ? "line-through text-white/30" : "text-white/70"}>{task}</span>
               </div>
             );
           })}
         </div>
 
-        {/* Live activity typewriter */}
-        <div className="px-5 py-4">
-          <div className="label mb-2">Live activity</div>
-          <div className="text-xs text-white/40 font-mono min-h-[18px]">
-            {activityText}<span className="blink opacity-60">_</span>
+        {/* Performance */}
+        <div className="px-5 py-4 grid grid-cols-3 gap-3 border-b border-white/5">
+          {[["98%", "CSAT"], ["1.4m", "RESP."], ["247", "TICKETS"]].map(([v, l]) => (
+            <div key={l} className="text-center">
+              <div className="text-base font-bold text-white leading-tight">{v}</div>
+              <div className="label text-[8px] mt-0.5">{l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Live activity */}
+        <div className="px-5 py-3.5">
+          <div className="label mb-1.5">Live activity</div>
+          <div className="text-[11px] text-white/35 font-mono min-h-[16px]">
+            {activityText}<span className="blink opacity-50">_</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Floating mini card — second agent ── */}
+      <div
+        className="absolute -bottom-8 -left-12 glass w-[160px]"
+        style={{ boxShadow: "0 16px 40px rgba(0,0,0,0.45)" }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-px bg-[#c8ff00]/25 pointer-events-none" />
+        <div className="p-3 flex items-center gap-2.5">
+          <div className="relative flex-shrink-0">
+            <div className="w-7 h-7 rounded-full bg-[rgba(167,139,250,0.18)] border border-[rgba(167,139,250,0.25)] flex items-center justify-center text-[9px] font-bold text-[#a78bfa]">
+              RK
+            </div>
+            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#2dd4bf] border border-[#09090f]" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10px] font-semibold text-white/80 leading-tight truncate">Ravi Kapoor</div>
+            <div className="text-[9px] text-white/30 mt-0.5">Data Analyst · Idle</div>
           </div>
         </div>
       </div>
